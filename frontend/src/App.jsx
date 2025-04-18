@@ -1,6 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { testRouter } from "./routers/client/Test.router";
+import { ClerkProvider } from "@clerk/clerk-react";
+import HomeLayout from "./pages/HomeLayout";
 import Test from "./pages/Test";
-
 /**
  * ====================================
  * routers
@@ -9,15 +11,23 @@ import Test from "./pages/Test";
 const routers = createBrowserRouter([
   {
     path: "/",
-    element: <Test></Test>,
-    errorElement: <h1>error</h1>,
+    element: <HomeLayout></HomeLayout>,
+    children: [testRouter],
   },
 ]);
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Add your Clerk Publishable Key to the .env file");
+}
 
 function App() {
   return (
     <>
-      <RouterProvider router={routers}></RouterProvider>
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+        <RouterProvider router={routers}></RouterProvider>
+      </ClerkProvider>
     </>
   );
 }
