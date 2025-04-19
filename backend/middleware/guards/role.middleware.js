@@ -13,7 +13,7 @@ module.exports.roleProtected = async (req, res, next) => {
   // // console.log(token);
   const userId = req.auth.userId;
   const user = await clerk.users.getUser(userId);
-
+  console.log(user);
   req.userId = userId;
   req.user = user;
 

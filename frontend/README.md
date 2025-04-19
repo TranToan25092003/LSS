@@ -22,3 +22,10 @@ const data = await customFetch.get("/", {
 });
 
 ```
+
+### Testing app healthy and get token
+
+```
+use this path
+http://localhost:5173/test
+```

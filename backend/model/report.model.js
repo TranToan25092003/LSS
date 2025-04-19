@@ -1,23 +1,24 @@
 const { Schema, model } = require("mongoose");
 
-const activityLogSchema = new Schema(
+const ReportSchema = new Schema(
   {
-    action: {
-      type: String,
-      required: true,
-    },
-    performedByClerkId: {
+    title: {
       type: String,
       required: true,
     },
 
-    details: {
+    description: {
+      type: String,
+      required: true,
+    },
+
+    reporterClerkId: {
       type: String,
     },
   },
   { timestamps: true }
 );
 
-const ActivityLog = model("activityLog", activityLogSchema);
+const Report = model("report", ReportSchema);
 
-module.exports = ActivityLog;
+module.exports = Report;

@@ -55,6 +55,8 @@ app.use(
 
 // Dùng sau middleware requireAuth()
 const userId = req.userId;
+or
+get userId by: req.auth.userId
 
 ### 4. Lấy toàn bộ thông tin user (dùng Clerk)
 
@@ -68,3 +70,15 @@ const user = await clerkClient.users.getUser(req.userId);
 
 - ## **Thứ tự middleware: Luôn theo đúng thứ tự:**
   -checkHeaders → requireAuth() → roleProtected
+
+### 5. thêm data cho user trong clerk public data
+
+```javascript
+const { clerkClient } = require("../../config/clerk");
+
+await clerkClient.users.updateUserMetadata(userId, {
+  publicMetadata: {
+    data: data,
+  },
+});
+```

@@ -26,6 +26,8 @@ const Test = () => {
             try {
               const token = await getToken();
 
+              console.log(`Bearer ${token}`);
+
               if (!token) {
                 const data = await axios.get("http://localhost:3000");
 
@@ -37,7 +39,7 @@ const Test = () => {
                   },
                 });
               } else {
-                const data = await customFetch.get("/", {
+                const data = await customFetch.get("/test", {
                   headers: {
                     Authorization: `Bearer ${token}`, // Gửi token trong header
                   },

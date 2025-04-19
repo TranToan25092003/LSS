@@ -1,5 +1,4 @@
-const ActivityLog = require("../model/log.model");
-
+// this controller is for testing do not write any logic code here please
 module.exports.checkHealth = async (req, res) => {
   console.log(req.userId);
 
@@ -7,3 +6,4 @@ module.exports.checkHealth = async (req, res) => {
     message: "System is healthy",
   });
 };
+// ------------------------------------------------------------

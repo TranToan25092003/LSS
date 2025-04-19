@@ -3,6 +3,8 @@ const express = require("express");
 
 const app = express();
 
+const comp = require("./model/index");
+
 //end create server
 
 require("dotenv").config(); // .env
