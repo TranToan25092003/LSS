@@ -3,6 +3,7 @@ import { testRouter } from "./routers/client/Test.router";
 import { ClerkProvider } from "@clerk/clerk-react";
 import HomeLayout from "./pages/HomeLayout";
 import Test from "./pages/Test";
+import { routesItem } from "./routers/client/index";
 /**
  * ====================================
  * routers
@@ -12,8 +13,9 @@ const routers = createBrowserRouter([
   {
     path: "/",
     element: <HomeLayout></HomeLayout>,
-    children: [testRouter],
+    children: [testRouter],routesItem,
   },
+
 ]);
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
