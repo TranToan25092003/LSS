@@ -6,6 +6,10 @@ const ItemSchema = new Schema(
       type: String,
       required: true,
     },
+    category:{
+      type: String,
+      require:true
+    },
     images: {
       type: [String],
     },
