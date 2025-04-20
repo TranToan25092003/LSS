@@ -12,11 +12,15 @@ const LendSchema = new Schema(
       enum: ["pending", "approved", "rejected"],
       default: "pending",
     },
+
+    rejectReason: {
+      type: String,
+    },
   },
 
   { timestamps: true }
 );
 
-const Lend = model("lend", LendSchema);
+const Lend = model("lends", LendSchema);
 
 module.exports = Lend;
