@@ -1,4 +1,5 @@
 const testRouter = require("./test.router");
+const returnRouter = require("./return.router");
 
 const { checkHeaders } = require("../../middleware/guards/authen.middleware");
 const { ClerkExpressRequireAuth } = require("@clerk/clerk-sdk-node");
@@ -9,4 +10,9 @@ module.exports = (app) => {
   // this router only for testing app do not use this router to write data ok
   app.use("/test", checkHeaders, requireAuth(), roleProtected, testRouter);
   // -------------------------------
+  app.use("/return",
+    checkHeaders,
+    requireAuth(),
+    returnRouter);
+
 };
