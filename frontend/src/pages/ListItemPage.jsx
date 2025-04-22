@@ -1,102 +1,107 @@
-"use client"
-
 import { useState, useEffect } from "react"
+import axios from "axios"
+
 import ItemList from "../components/item/item-list"
-import FilterBar from "../components/filter-bar"
-import Pagination from "../components/pagination"
-import { mockItems } from "../lib/mock-data"
+import FilterBar from "../components/item/filter-bar"
+import SearchBar from "../components/item/search-bar"
+import Pagination from "../components/item/pagination"
 
 export default function ListItemsPage() {
+  const [pageSize, setPageSize] = useState(0)
   const [items, setItems] = useState([])
-  const [filteredItems, setFilteredItems] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
+
   const [filters, setFilters] = useState({
+    search: "", // chỉ dùng ở frontend
     category: "",
     status: "",
-    priceRange: [0, 1000000],
+    priceRange: [0, 1000000000],
     rate: "",
     isFree: false,
+    sortBy: "createdAt",
+    sortOrder: "desc",
   })
 
-  const ITEMS_PER_PAGE = 8
-
-  // Simulate fetching data from API
   useEffect(() => {
     const fetchItems = async () => {
+      setIsLoading(true)
       try {
-        // In a real app, this would be an API call
-        // const response = await fetch('/api/items')
-        // const data = await response.json()
+        const params = {}
 
-        // Using mock data for demonstration
-        setTimeout(() => {
-          setItems(mockItems)
-          setFilteredItems(mockItems)
-          setIsLoading(false)
-        }, 500)
+        // Các filter gửi lên backend (KHÔNG gồm search)
+        if (filters.category) params.category = filters.category
+        if (filters.status) params.status = filters.status
+        if (filters.rate) params.rate = filters.rate
+        if (filters.isFree) params.isFree = true
+
+        params.minPrice = filters.priceRange[0]
+        params.maxPrice = filters.priceRange[1]
+
+        if (filters.sortBy) {
+          if (filters.sortBy === "price-asc") {
+            params.sortBy = "price"
+            params.sortOrder = "asc"
+          } else if (filters.sortBy === "price-desc") {
+            params.sortBy = "price"
+            params.sortOrder = "desc"
+          } else {
+            params.sortBy = filters.sortBy
+            params.sortOrder = filters.sortOrder
+          }
+        }
+
+        const response = await axios.get(
+          `http://localhost:3000/items?page=${currentPage}`,
+          { params }
+        )
+
+        let filteredItems = response.data.items
+
+        if (filters.search) {
+          const keyword = filters.search.toLowerCase()
+          filteredItems = filteredItems.filter((item) =>
+            item.title.toLowerCase().includes(keyword)
+          )
+        }
+
+        setItems(filteredItems)
+        setTotalItems(filteredItems.length)
+        setPageSize(response.data.limit)
       } catch (error) {
         console.error("Error fetching items:", error)
+      } finally {
         setIsLoading(false)
       }
     }
 
     fetchItems()
-  }, [])
-
-  // Apply filters when filters state changes
-  useEffect(() => {
-    if (items.length > 0) {
-      let result = [...items]
-
-      // Filter by category
-      if (filters.category) {
-        result = result.filter((item) => item.category === filters.category)
-      }
-
-      // Filter by status
-      if (filters.status) {
-        result = result.filter((item) => item.status === filters.status)
-      }
-
-      // Filter by price range
-      result = result.filter((item) => item.price >= filters.priceRange[0] && item.price <= filters.priceRange[1])
-
-      // Filter by rate type
-      if (filters.rate) {
-        result = result.filter((item) => item.rate === filters.rate)
-      }
-
-      // Filter by free items
-      if (filters.isFree) {
-        result = result.filter((item) => item.isFree)
-      }
-
-      setFilteredItems(result)
-      setCurrentPage(1) // Reset to first page when filters change
-    }
-  }, [filters, items])
+  }, [filters, currentPage])
 
   const handleFilterChange = (newFilters) => {
     setFilters((prev) => ({ ...prev, ...newFilters }))
+    setCurrentPage(1)
   }
 
-  // Calculate pagination
-  const totalItems = filteredItems.length
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE)
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-  const endIndex = startIndex + ITEMS_PER_PAGE
-  const currentItems = filteredItems.slice(startIndex, endIndex)
+  const handleSearchChange = (searchValue) => {
+    setFilters((prev) => ({ ...prev, search: searchValue }))
+    setCurrentPage(1)
+  }
 
-  const handlePageChange = (page) => {
+
+  const onChangePage = (page) => {
     setCurrentPage(page)
-    // Scroll to top when page changes
-    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   return (
     <main className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Available Items</h1>
+
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <SearchBar onSearch={handleSearchChange} />
+        <div className="text-sm text-gray-500">{totalItems} items found</div>
+      </div>
 
       <FilterBar filters={filters} onFilterChange={handleFilterChange} />
 
@@ -104,13 +109,23 @@ export default function ListItemsPage() {
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
+      ) : items.length === 0 ? (
+        <div className="text-center py-12">
+          <h3 className="text-lg font-medium text-gray-900">No items found</h3>
+          <p className="mt-2 text-sm text-gray-500">
+            Try adjusting your search or filter to find what you're looking for.
+          </p>
+        </div>
       ) : (
         <>
-          <ItemList items={currentItems} />
-
-          {totalItems > 0 && (
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-          )}
+          <ItemList items={items} />
+          <Pagination
+            total={totalItems}
+            currentPage={currentPage}
+            onChange={onChangePage}
+            pageSize={pageSize}
+            align="center"
+          />
         </>
       )}
     </main>

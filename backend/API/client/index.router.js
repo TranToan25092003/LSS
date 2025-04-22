@@ -15,7 +15,7 @@ module.exports = (app) => {
   app.use("/test", checkHeaders, requireAuth(), roleProtected, testRouter);
   // -------------------------------
 
-  
+  // app.use("/vnp")
   app.use("/items", itemRouter);
   app.use("/borrows", borrowRouter);
 };

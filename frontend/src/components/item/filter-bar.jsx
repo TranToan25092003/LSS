@@ -1,19 +1,19 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "./ui/button"
-import { Card, CardContent } from "./ui/card"
-import { Checkbox } from "./ui/checkbox"
-import { Label } from "./ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { Slider } from "./ui/slider"
+import { Button } from "../ui/button"
+import { Card, CardContent } from "../ui/card"
+import { Checkbox } from "../ui/checkbox"
+import { Label } from "../ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { Slider } from "../ui/slider"
 import { ChevronDown, ChevronUp, Filter } from "lucide-react"
-import { formatPrice } from "../lib/utils"
+import { formatPrice } from "../../lib/utils"
 
 export default function FilterBar({ filters, onFilterChange }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
-  const categories = ["Electronics", "Tools", "Sports", "Books", "Furniture", "Clothing", "Other"]
+  const categories = ["Electronics", "Tools", "Sports", "Books", "Other"]
 
   const handleReset = () => {
     onFilterChange({
@@ -102,8 +102,8 @@ export default function FilterBar({ filters, onFilterChange }) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Rates</SelectItem>
-                <SelectItem value="day">Per Day</SelectItem>
-                <SelectItem value="hour">Per Hour</SelectItem>
+                {/* <SelectItem value="day">Per Day</SelectItem>
+                <SelectItem value="hour">Per Hour</SelectItem> */}
               </SelectContent>
             </Select>
           </div>

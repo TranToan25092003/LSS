@@ -2,8 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { testRouter } from "./routers/client/Test.router";
 import { ClerkProvider } from "@clerk/clerk-react";
 import HomeLayout from "./pages/HomeLayout";
-import Test from "./pages/Test";
-import { routesItem } from "./routers/client/index";
+import { routes } from "./routers/client/index";
 /**
  * ====================================
  * routers
@@ -13,7 +12,8 @@ const routers = createBrowserRouter([
   {
     path: "/",
     element: <HomeLayout></HomeLayout>,
-    children: [testRouter],routesItem,
+    children: [testRouter,...routes]
+    
   },
 
 ]);

@@ -2,11 +2,11 @@
 
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { Badge } from "./ui/badge"
-import { Button } from "./ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
-import { formatPrice } from "../lib/utils"
+import { Badge } from "../ui/badge"
+import { Button } from "../ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
+import { formatPrice } from "../../lib/utils"
 
 export default function ItemCard({ item }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -23,7 +23,7 @@ export default function ItemCard({ item }) {
   return (
     <>
       <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow">
-        <Link to={`/items/${_id}`} className="flex-grow flex flex-col">
+        <Link to={`/listItem/${_id}`} className="flex-grow flex flex-col">
           <div className="relative h-48 w-full">
             <img src={displayImage || "/placeholder.svg"} alt={name} className="object-cover w-full h-full" />
             {isFree && (

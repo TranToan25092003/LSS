@@ -1,5 +1,5 @@
 "use client"
-
+import axios from "axios"
 import { useState, useEffect } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
 import { Badge } from "../components/ui/badge"
@@ -10,11 +10,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
 import { formatPrice } from "../lib/utils"
-import { mockItems } from "../lib/mock-data"
 import { ArrowLeft, Calendar, Clock, DollarSign, Info, User } from "lucide-react"
 
 export default function ItemDetailPage() {
-  const params = useParams()
+  const { itemId } = useParams()
   const navigate = useNavigate()
   const [item, setItem] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -24,35 +23,25 @@ export default function ItemDetailPage() {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        // In a real app, this would be an API call
-        // const response = await fetch(`/api/items/${params.id}`)
-        // const data = await response.json()
-
-        // Using mock data for demonstration
-        setTimeout(() => {
-          const foundItem = mockItems.find((item) => item._id === params.id)
-          if (foundItem) {
-            setItem(foundItem)
-            setTotalPrice(foundItem.price)
-          } else {
-            // Item not found, redirect to items page
-            navigate("/")
-          }
-          setIsLoading(false)
-        }, 500)
+        const response = await axios.get(`http://localhost:3000/items/${itemId}`)
+        const data = response.data
+        setItem(data)
+        setTotalPrice(data.isFree ? 0 : data.price)
       } catch (error) {
-        console.error("Error fetching item:", error)
+        console.error("Error fetching item:", error.response?.data?.message || error.message)
+        navigate("/")
+      } finally {
         setIsLoading(false)
       }
     }
-
-    if (params.id) {
+  
+    if (itemId) {
       fetchItem()
     }
-  }, [params.id, navigate])
+  }, [itemId, navigate])
 
   const handleDurationChange = (e) => {
-    const duration = Number.parseInt(e.target.value) || 1
+    const duration = parseInt(e.target.value) || 1
     setBorrowDuration(duration)
     if (item && !item.isFree) {
       setTotalPrice(item.price * duration)
@@ -102,14 +91,12 @@ export default function ItemDetailPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left column - Image */}
         <div className="md:col-span-2">
           <div className="relative aspect-video w-full rounded-lg overflow-hidden">
-            <img src={displayImage || "/placeholder.svg"} alt={name} className="object-cover w-full h-full" />
+            <img src={displayImage} alt={name} className="object-cover w-full h-full" />
           </div>
         </div>
 
-        {/* Right column - Item details */}
         <div>
           <Card className="p-6">
             <div className="mb-4">
@@ -179,7 +166,6 @@ export default function ItemDetailPage() {
         </div>
       </div>
 
-      {/* Item details tabs */}
       <div className="mt-8">
         <Tabs defaultValue="description">
           <TabsList className="grid w-full grid-cols-3">
@@ -193,36 +179,10 @@ export default function ItemDetailPage() {
           </TabsContent>
           <TabsContent value="details" className="p-4 border rounded-md mt-2">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-start gap-2">
-                <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div>
-                  <h4 className="font-medium">Listed On</h4>
-                  <p className="text-sm text-muted-foreground">{formattedDate}</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <Clock className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div>
-                  <h4 className="font-medium">Rate Type</h4>
-                  <p className="text-sm text-muted-foreground">Per {rate}</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div>
-                  <h4 className="font-medium">Price</h4>
-                  <p className="text-sm text-muted-foreground">{isFree ? "Free" : formatPrice(price)}</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <Info className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div>
-                  <h4 className="font-medium">Status</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {status === "available" ? "Available" : "Not Available"}
-                  </p>
-                </div>
-              </div>
+              <DetailIcon icon={<Calendar />} label="Listed On" value={formattedDate} />
+              <DetailIcon icon={<Clock />} label="Rate Type" value={`Per ${rate}`} />
+              <DetailIcon icon={<DollarSign />} label="Price" value={isFree ? "Free" : formatPrice(price)} />
+              <DetailIcon icon={<Info />} label="Status" value={status === "available" ? "Available" : "Not Available"} />
             </div>
           </TabsContent>
           <TabsContent value="owner" className="p-4 border rounded-md mt-2">
@@ -240,6 +200,19 @@ export default function ItemDetailPage() {
             </div>
           </TabsContent>
         </Tabs>
+      </div>
+    </div>
+  )
+}
+
+// Component phụ cho chi tiết trong tab
+function DetailIcon({ icon, label, value }) {
+  return (
+    <div className="flex items-start gap-2">
+      <div className="text-muted-foreground mt-0.5">{icon}</div>
+      <div>
+        <h4 className="font-medium">{label}</h4>
+        <p className="text-sm text-muted-foreground">{value}</p>
       </div>
     </div>
   )
