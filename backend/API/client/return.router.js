@@ -5,7 +5,7 @@ const returnController = require("../../controller/return.controller");
 const { checkHeaders } = require("../../middleware/guards/authen.middleware");
 const { requireAuth } = require("@clerk/express");
 
-outer.use(checkHeaders, requireAuth());
+router.use(checkHeaders, requireAuth());
 
 /**
  * Người mượn xác nhận đã trả đồ

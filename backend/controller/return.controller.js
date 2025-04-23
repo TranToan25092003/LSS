@@ -4,7 +4,7 @@ const Lend = require("../model/lend.model");
 const Item = require("../model/item.model");
 
 module.exports.borrowerConfirmReturn = async (req, res) => {
-    const borrowerId = req.userId; 
+    const borrowerId = req.auth.userId; 
 //  const borrowerId = "borrower_xyz_001";//test hardcode
     const { borrowId } = req.body;
 
@@ -41,7 +41,7 @@ module.exports.borrowerConfirmReturn = async (req, res) => {
 
 
 module.exports.ownerConfirmReturn = async (req, res) => {
-    const ownerClerkId = req.userId;
+    const ownerClerkId = req.auth.userId; 
     //const ownerClerkId = "owner_abc_001"; //test hardcode
     const { itemId } = req.body;
 
