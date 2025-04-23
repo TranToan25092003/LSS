@@ -3,6 +3,7 @@ import { testRouter } from "./routers/client/Test.router";
 import { ClerkProvider } from "@clerk/clerk-react";
 import HomeLayout from "./pages/HomeLayout";
 import Test from "./pages/Test";
+import { orderRouter } from "./routers/client/Order.router";
 /**
  * ====================================
  * routers
@@ -12,7 +13,7 @@ const routers = createBrowserRouter([
   {
     path: "/",
     element: <HomeLayout></HomeLayout>,
-    children: [testRouter],
+    children: [testRouter,orderRouter],
   },
 ]);
 
