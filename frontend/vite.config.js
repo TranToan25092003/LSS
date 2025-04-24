@@ -11,4 +11,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    // Thêm cấu hình này
+    watch: {
+      usePolling: true,
+    },
+  },
 });

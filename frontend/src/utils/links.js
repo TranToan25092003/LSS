@@ -1,16 +1,16 @@
 export const links = [
   { href: "/", label: "home" },
-  { href: "/about", label: "about" },
-  { href: "/products", label: "products" },
-  { href: "/favorites", label: "favorites" },
-  { href: "/cart", label: "cart" },
-  { href: "/orders", label: "orders" },
-  { href: "/admin/dashboard", label: "dashboard" },
-  { href: "/reviews", label: "reviews" },
+  { href: "/supplies", label: "my supplies" },
+  { href: "/history", label: "history" },
+  { href: "/lends", label: "lend" },
+  { href: "/return", label: "return" },
+  { href: "/admin", label: "dashboard" },
+  { href: "/report", label: "report" },
 ];
 
 export const adminLinks = [
-  { href: "/admin/sales", label: "sales" },
-  { href: "/admin/products", label: "my products" },
-  { href: "/admin/products/create", label: "create product" },
+  { href: "/admin", label: "dashboard" },
+  { href: "/admin/supplies", label: "supplies" },
+  { href: "/admin/reject", label: "reject list" },
+  { href: "/admin/report", label: "report" },
 ];

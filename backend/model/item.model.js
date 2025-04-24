@@ -6,9 +6,9 @@ const ItemSchema = new Schema(
       type: String,
       required: true,
     },
-    category:{
+    category: {
       type: String,
-      require:true
+      require: true,
     },
     images: {
       type: [String],
