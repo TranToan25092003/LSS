@@ -23,6 +23,11 @@ const getAllItems = async (req, res) => {
     };
 
     // Search theo tiêu đề hoặc mô tả
+    const search = req.query.search;
+    if (search) {
+      filter.name = { $regex: search, $options: "i" };
+    }
+    
     if (category) {
       filter.category = { $regex: new RegExp(category, "i") };
     }
@@ -32,7 +37,7 @@ const getAllItems = async (req, res) => {
     }
 
     if (rate) {
-      filter.rate = { $gte: Number(rate) };
+      filter.rate = rate; 
     }
 
     if (isFree === "true") {

@@ -1,12 +1,16 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
-export default function SearchBar({ onSearch }) {
-  const [searchTerm, setSearchTerm] = useState("")
+export default function SearchBar({ search, onSearchChange }) {
+  const [searchTerm, setSearchTerm] = useState(search || "")
+
+  useEffect(() => {
+    setSearchTerm(search || "")
+  }, [search])
 
   const handleInputChange = (e) => {
     const value = e.target.value
     setSearchTerm(value)
-    onSearch(value)
+    onSearchChange(value)
   }
 
   return (

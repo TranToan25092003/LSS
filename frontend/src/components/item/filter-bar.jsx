@@ -102,8 +102,8 @@ export default function FilterBar({ filters, onFilterChange }) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Rates</SelectItem>
-                {/* <SelectItem value="day">Per Day</SelectItem>
-                <SelectItem value="hour">Per Hour</SelectItem> */}
+                <SelectItem value="day">Per Day</SelectItem>
+                <SelectItem value="hour">Per Hour</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -34,7 +34,7 @@ export default function ItemDetailPage() {
         setIsLoading(false)
       }
     }
-  
+
     if (itemId) {
       fetchItem()
     }
@@ -65,7 +65,7 @@ export default function ItemDetailPage() {
           <h3 className="text-xl font-medium text-gray-600">Item not found</h3>
           <p className="mt-2 text-gray-500">The item you're looking for doesn't exist or has been removed.</p>
           <Button asChild className="mt-4">
-            <Link to="/">Back to Items</Link>
+            <Link to="/listItem">Back to Items</Link>
           </Button>
         </div>
       </div>
@@ -83,7 +83,7 @@ export default function ItemDetailPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
         <Button variant="ghost" asChild className="pl-0">
-          <Link to="/" className="flex items-center">
+          <Link to="/listItem" className="flex items-center">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Items
           </Link>
@@ -151,7 +151,35 @@ export default function ItemDetailPage() {
                         <span className="font-bold">{isFree ? "FREE" : formatPrice(totalPrice)}</span>
                       </div>
                       <div className="pt-4 border-t">
-                        <Button className="w-full">Confirm and Pay</Button>
+                      <Button
+  className="w-full"
+  onClick={() => {
+    console.log("Navigating with state:", {
+      itemId,
+      name,
+      description,
+      price,
+      rate: rateText,
+      isFree,
+      borrowDuration,
+      totalPrice,
+    });
+    navigate("/checkout-item", {
+      state: {
+        itemId,
+        name,
+        description,
+        price,
+        rate: rateText,
+        isFree,
+        borrowDuration,
+        totalPrice,
+      },
+    });
+  }}
+>
+  Confirm and Pay
+</Button>
                       </div>
                     </div>
                   </DialogContent>
@@ -205,7 +233,7 @@ export default function ItemDetailPage() {
   )
 }
 
-// Component phụ cho chi tiết trong tab
+
 function DetailIcon({ icon, label, value }) {
   return (
     <div className="flex items-start gap-2">

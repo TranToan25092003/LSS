@@ -2,26 +2,31 @@ const { Borrow, Item } = require('../model');
 
 const createBorrow = async (req, res, next) => {
   try {
-    const { itemId, totalTime } = req.body;
+    const { borrowerClerkId, itemId, totalTime, totalPrice } = req.body;
 
-    // Kiểm tra totalTime hợp lệ
+    
     if (typeof totalTime !== 'number' || totalTime <= 0 || totalTime > 540) {
       return res.status(400).json({ message: 'totalTime must be a number between 1 and 540 hours' });
     }
 
     const item = await Item.findById(itemId);
-    if (!item || item.status !== 'available') {
-      return res.status(400).json({ message: 'Item not available' });
+    if (!item) {
+      return res.status(400).json({ message: 'Item not found' });
     }
+    if (item.status !== 'available') {
+      return res.status(400).json({ message: 'Item is currently not available' });
+    }
+    
 
-    const totalPrice = item.isFree ? 0 : item.price * totalTime;
+    // Tạo bản ghi Borrow
     const borrow = await Borrow.create({
-      borrowerClerkId: req.user.id,
+      borrowerClerkId,
       item: itemId,
       totalTime,
-      totalPrice
+      totalPrice,
     });
 
+    // Cập nhật trạng thái sản phẩm
     item.status = 'notAvailable';
     await item.save();
 

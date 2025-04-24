@@ -8,7 +8,7 @@ const ItemSchema = new Schema(
     },
     category:{
       type: String,
-      require:true
+      required:true
     },
     images: {
       type: [String],

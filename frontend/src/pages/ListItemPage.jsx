@@ -13,8 +13,10 @@ export default function ListItemsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
 
+   
+
   const [filters, setFilters] = useState({
-    search: "", // chỉ dùng ở frontend
+    search: "",
     category: "",
     status: "",
     priceRange: [0, 1000000000],
@@ -30,7 +32,7 @@ export default function ListItemsPage() {
       try {
         const params = {}
 
-        // Các filter gửi lên backend (KHÔNG gồm search)
+        if (filters.search) params.search = filters.search
         if (filters.category) params.category = filters.category
         if (filters.status) params.status = filters.status
         if (filters.rate) params.rate = filters.rate
@@ -52,22 +54,19 @@ export default function ListItemsPage() {
           }
         }
 
-        const response = await axios.get(
-          `http://localhost:3000/items?page=${currentPage}`,
-          { params }
-        )
+        const response = await axios.get("http://localhost:3000/items", {
+          params: {
+            ...params,
+            page: currentPage,
+          },
+        })
+        
 
         let filteredItems = response.data.items
 
-        if (filters.search) {
-          const keyword = filters.search.toLowerCase()
-          filteredItems = filteredItems.filter((item) =>
-            item.title.toLowerCase().includes(keyword)
-          )
-        }
-
+        
         setItems(filteredItems)
-        setTotalItems(filteredItems.length)
+        setTotalItems(response.data.totalItems)
         setPageSize(response.data.limit)
       } catch (error) {
         console.error("Error fetching items:", error)
@@ -84,10 +83,6 @@ export default function ListItemsPage() {
     setCurrentPage(1)
   }
 
-  const handleSearchChange = (searchValue) => {
-    setFilters((prev) => ({ ...prev, search: searchValue }))
-    setCurrentPage(1)
-  }
 
 
   const onChangePage = (page) => {
@@ -96,10 +91,14 @@ export default function ListItemsPage() {
 
   return (
     <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Available Items</h1>
+      <h1 className="text-3xl font-bold mb-8">List Items</h1>
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-      <SearchBar onSearch={handleSearchChange} />
+      <SearchBar 
+      search={filters.search}
+      onSearchChange={(value) => handleFilterChange({ search: value })}
+      />
+
         <div className="text-sm text-gray-500">{totalItems} items found</div>
       </div>
 
@@ -119,13 +118,16 @@ export default function ListItemsPage() {
       ) : (
         <>
           <ItemList items={items} />
-          <Pagination
+          <div className="mt-12">
+          <Pagination 
             total={totalItems}
             currentPage={currentPage}
             onChange={onChangePage}
             pageSize={pageSize}
             align="center"
+
           />
+          </div>
         </>
       )}
     </main>

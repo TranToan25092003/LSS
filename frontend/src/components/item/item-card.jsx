@@ -1,6 +1,6 @@
-"use client"
 
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"; 
 import { Link } from "react-router-dom"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
@@ -10,6 +10,8 @@ import { formatPrice } from "../../lib/utils"
 
 export default function ItemCard({ item }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
 
   const { _id, name, category, images, description, price, rate, isFree, status } = item
 
@@ -19,6 +21,21 @@ export default function ItemCard({ item }) {
 
   // Use "giờ" for hour rate, but keep "day" in English
   const rateText = rate === "day" ? "day" : "giờ"
+
+  const handleConfirmBorrow = () => {
+    navigate("/checkout-item", {
+      state: {
+        borrowerClerkId: userId,
+        itemId: item._id,
+        name: item.name,
+        price: item.price,
+        isFree: item.isFree,
+        rate: item.rate,
+        image: displayImage,
+        description: item.description,
+      },
+    });
+  };
 
   return (
     <>
@@ -89,7 +106,9 @@ export default function ItemCard({ item }) {
                 <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button>Confirm Borrow</Button>
+                <Button onClick={handleConfirmBorrow}>
+                Confirm Borrow
+                </Button>
               </div>
             </div>
           </div>
