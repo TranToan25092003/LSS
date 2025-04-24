@@ -13,7 +13,7 @@ const { clerkClient } = require("../../config/clerk");
 
 module.exports = (app) => {
   // this router only for testing app do not use this router to write data ok
-  app.use("/test", checkHeaders, requireAuth(), roleProtected, testRouter);
+  app.use("/test", checkHeaders, requireAuth(), testRouter);
   // -------------------------------
 
   app.use("/lends", checkHeaders, requireAuth(), lendsRouter);

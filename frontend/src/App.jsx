@@ -3,7 +3,7 @@ import { testRouter } from "./routers/client/Test.router";
 import { ClerkProvider } from "@clerk/clerk-react";
 import HomeLayout from "./pages/HomeLayout";
 import { adminRouter } from "./routers/admin/Admin.router";
-import { worker } from "./mocks/browser";
+// import { worker } from "./mocks/browser";
 import ErrorPage from "./components/global/Error";
 import Lends, { lendLoader } from "./pages/Lends";
 import Report, { reportLoader } from "./pages/Report";
