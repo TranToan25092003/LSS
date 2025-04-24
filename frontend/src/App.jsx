@@ -11,6 +11,7 @@ import Return from "./pages/Return";
 import History from "./pages/History";
 import MySupplies, { mySuppliesLoader } from "./pages/MySupplies";
 
+import { routes } from "./routers/client/index";
 /**
  * ====================================
  * routers
@@ -49,10 +50,12 @@ const routers = createBrowserRouter([
         path: "supplies",
         element: <MySupplies></MySupplies>,
         loader: mySuppliesLoader,
-      },
+      },...routes
     ],
-    errorElement: <ErrorPage></ErrorPage>,
+   
+    
   },
+
 ]);
 
 // worker
