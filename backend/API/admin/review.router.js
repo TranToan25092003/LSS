@@ -5,7 +5,7 @@ const { clerkClient } = require("../../config/clerk");
 const {
   throwErrors,
 } = require("../../middleware/validate-data/throwErrors.middleware");
-const validateLendStatus = require("../../dto/lendStatus.dto");
+const { validateLendStatus } = require("../../dto/lendStatus.dto");
 
 /**
  * ====================================

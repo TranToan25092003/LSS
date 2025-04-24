@@ -1,28 +1,25 @@
-
 import ListAllItem from "../../pages/ListItemPage";
 import DetailItem from "../../pages/ItemDetailPage";
-import CheckOut from "../../pages/CheckOutItem";
+import CheckOut, { checkoutLoader } from "../../pages/CheckOutItem";
 import VNPayReturn from "../../pages/VnpayReturn";
 
 export const routes = [
   {
-    path: "/listItem",
+    index: true,
     element: <ListAllItem></ListAllItem>,
-    errorElement: <h1>error</h1>,
   },
   {
     path: "/listItem/:itemId",
     element: <DetailItem></DetailItem>,
-    errorElement: <h1>error</h1>,
   },
   {
     path: "/checkout-item",
     element: <CheckOut></CheckOut>,
-    errorElement: <h1>error</h1>,
+    loader: checkoutLoader,
   },
   {
     path: "/return-vnpay",
     element: <VNPayReturn></VNPayReturn>,
-    errorElement: <h1>error</h1>,
-  }
+    loader: checkoutLoader,
+  },
 ];

@@ -14,5 +14,4 @@ const validateItemStatus = [
     .withMessage("Invalid status, status must is approved or rejected"),
 ];
 
-module.exports = validateLendStatus;
-module.exports = validateItemStatus;
+module.exports = { validateLendStatus, validateItemStatus };

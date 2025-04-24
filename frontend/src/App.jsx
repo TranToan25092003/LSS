@@ -50,12 +50,11 @@ const routers = createBrowserRouter([
         path: "supplies",
         element: <MySupplies></MySupplies>,
         loader: mySuppliesLoader,
-      },...routes
+      },
+      ...routes,
     ],
-   
-    
+    errorElement: <ErrorPage></ErrorPage>,
   },
-
 ]);
 
 // worker

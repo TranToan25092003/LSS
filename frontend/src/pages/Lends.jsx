@@ -154,18 +154,22 @@ export default function Lends() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="images">Images</Label>
-              <Button
-                variant={"outline"}
-                className={"cursor-pointer"}
-                type="button"
-                size={"lg"}
-                onClick={() => {
-                  widgeRef.current.open();
-                }}
-              >
-                Upload
-              </Button>
+              <div className="flex">
+                <Label htmlFor="images" className={"mr-2"}>
+                  Images
+                </Label>
+                <Button
+                  variant={"outline"}
+                  className={"cursor-pointer"}
+                  type="button"
+                  size={"lg"}
+                  onClick={() => {
+                    widgeRef.current.open();
+                  }}
+                >
+                  Upload
+                </Button>
+              </div>
               {imageFiles.length > 0 && (
                 <div className="mt-2 flex gap-2 flex-wrap">
                   {imageFiles.map((url) => {
@@ -262,7 +266,6 @@ export default function Lends() {
               <Label htmlFor="status">Status</Label>
               <Select
                 name="status"
-                value={formData.status}
                 onValueChange={(value) =>
                   setFormData((prev) => ({ ...prev, status: value }))
                 }

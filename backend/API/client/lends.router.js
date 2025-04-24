@@ -5,7 +5,7 @@ const itemValidation = require("../../dto/item.dto");
 const {
   throwErrors,
 } = require("../../middleware/validate-data/throwErrors.middleware");
-const validateItemStatus = require("../../dto/lendStatus.dto");
+const { validateItemStatus } = require("../../dto/lendStatus.dto");
 
 /**
  * ====================================

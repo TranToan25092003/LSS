@@ -10,8 +10,9 @@ import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Swal from "sweetalert2";
 
-export const reviewLoader = async ({ request }) => {
+export const reviewLoader = async () => {
   try {
+    console.log("9999");
     const token = await clerk.session.getToken();
 
     const { data } = await customFetch.get("/admin/reviews", {
@@ -54,11 +55,11 @@ const Review = () => {
       setSubmit(true);
 
       try {
-        const { data } = await customFetch.put("/admin/reviews", {
+        const response = await customFetch.put("/admin/reviews", {
           lendId,
           status: "approved",
         });
-
+        console.log(response);
         await Swal.fire({
           title: "Thành công!",
           text: "Đã phê duyệt .",
@@ -69,7 +70,9 @@ const Review = () => {
         navigate(location.pathname, { replace: true });
 
         setSubmit(false);
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

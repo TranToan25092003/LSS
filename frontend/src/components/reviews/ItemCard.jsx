@@ -42,7 +42,7 @@ export function ItemCard({ item, status, children, rejectReason }) {
             </span>
           </p>
           <p className="text-sm">Miễn phí: {item.isFree ? "Có" : "Không"}</p>
-          {console.log(item)}
+
           {rejectReason && (
             <p className="text-sm">
               reject reason: <b className="text-red-500">{rejectReason}</b>

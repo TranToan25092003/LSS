@@ -1,19 +1,25 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "../ui/button"
-import { Card, CardContent } from "../ui/card"
-import { Checkbox } from "../ui/checkbox"
-import { Label } from "../ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
-import { Slider } from "../ui/slider"
-import { ChevronDown, ChevronUp, Filter } from "lucide-react"
-import { formatPrice } from "../../lib/utils"
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Slider } from "../ui/slider";
+import { ChevronDown, ChevronUp, Filter } from "lucide-react";
+import { formatPrice } from "../../lib/utils";
 
 export default function FilterBar({ filters, onFilterChange }) {
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const categories = ["Electronics", "Tools", "Sports", "Books", "Other"]
+  const categories = ["Electronics", "Tools", "Sports", "Books", "Other"];
 
   const handleReset = () => {
     onFilterChange({
@@ -22,8 +28,8 @@ export default function FilterBar({ filters, onFilterChange }) {
       priceRange: [0, 1000000],
       rate: "",
       isFree: false,
-    })
-  }
+    });
+  };
 
   return (
     <Card className="mb-6">
@@ -54,11 +60,15 @@ export default function FilterBar({ filters, onFilterChange }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <div>
-            <Label htmlFor="category">Category</Label>
+          <div className="flex  flex-col items-center m-1 p-1">
+            <Label htmlFor="category" className={"mb-1"}>
+              Category
+            </Label>
             <Select
               value={filters.category || "all"}
-              onValueChange={(value) => onFilterChange({ category: value === "all" ? "" : value })}
+              onValueChange={(value) =>
+                onFilterChange({ category: value === "all" ? "" : value })
+              }
             >
               <SelectTrigger id="category">
                 <SelectValue placeholder="All Categories" />
@@ -74,11 +84,15 @@ export default function FilterBar({ filters, onFilterChange }) {
             </Select>
           </div>
 
-          <div>
-            <Label htmlFor="status">Status</Label>
+          <div className="flex  flex-col items-center m-1 p-1">
+            <Label htmlFor="status" className={"mb-1"}>
+              Status
+            </Label>
             <Select
               value={filters.status || "all"}
-              onValueChange={(value) => onFilterChange({ status: value === "all" ? "" : value })}
+              onValueChange={(value) =>
+                onFilterChange({ status: value === "all" ? "" : value })
+              }
             >
               <SelectTrigger id="status">
                 <SelectValue placeholder="All Statuses" />
@@ -91,11 +105,15 @@ export default function FilterBar({ filters, onFilterChange }) {
             </Select>
           </div>
 
-          <div>
-            <Label htmlFor="rate">Rate Type</Label>
+          <div className="flex  flex-col items-center m-1 p-1">
+            <Label htmlFor="rate" className={"mb-1"}>
+              Rate Type
+            </Label>
             <Select
               value={filters.rate || "all"}
-              onValueChange={(value) => onFilterChange({ rate: value === "all" ? "" : value })}
+              onValueChange={(value) =>
+                onFilterChange({ rate: value === "all" ? "" : value })
+              }
             >
               <SelectTrigger id="rate">
                 <SelectValue placeholder="All Rates" />
@@ -115,7 +133,8 @@ export default function FilterBar({ filters, onFilterChange }) {
               <div className="flex justify-between mb-2">
                 <Label>Price Range</Label>
                 <span className="text-sm text-muted-foreground">
-                  {formatPrice(filters.priceRange[0])} - {formatPrice(filters.priceRange[1])}
+                  {formatPrice(filters.priceRange[0])} -{" "}
+                  {formatPrice(filters.priceRange[1])}
                 </span>
               </div>
               <Slider
@@ -132,7 +151,9 @@ export default function FilterBar({ filters, onFilterChange }) {
               <Checkbox
                 id="isFree"
                 checked={filters.isFree}
-                onCheckedChange={(checked) => onFilterChange({ isFree: checked })}
+                onCheckedChange={(checked) =>
+                  onFilterChange({ isFree: checked })
+                }
               />
               <Label htmlFor="isFree">Show only free items</Label>
             </div>
@@ -146,5 +167,5 @@ export default function FilterBar({ filters, onFilterChange }) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
