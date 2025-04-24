@@ -115,8 +115,9 @@ export default function ItemDetailPage() {
     isFree,
     status,
     ownerClerkId,
+
     createdAt,
-  } = item;
+  } = item.item;
   const statusColor =
     status === "available"
       ? "bg-green-100 text-green-800"
@@ -336,11 +337,13 @@ export default function ItemDetailPage() {
           <TabsContent value="owner" className="p-4 border rounded-md mt-2">
             <div className="flex items-start gap-4">
               <div className="bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center">
-                <User className="h-6 w-6 text-gray-600" />
+                <img src={item.user.imageUrl} alt="" />
               </div>
               <div>
-                <h4 className="font-medium">Owner ID</h4>
-                <p className="text-sm text-muted-foreground">{ownerClerkId}</p>
+                <h4 className="font-medium">Owner email</h4>
+                <p className="text-sm text-muted-foreground">
+                  {item.user.email}
+                </p>
                 <Button variant="outline" size="sm" className="mt-2">
                   Contact Owner
                 </Button>

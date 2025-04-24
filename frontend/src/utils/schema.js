@@ -41,7 +41,7 @@ export const ReportSchema = z.object({
   description: z
     .string()
     .min(1, "Description cannot be empty")
-    .max(10000, "Description cannot exceed 10000 characters"),
+    .max(10000000, "Description cannot exceed 10000000 characters"),
 });
 
 /**

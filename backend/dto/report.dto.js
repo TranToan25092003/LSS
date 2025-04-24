@@ -9,8 +9,8 @@ const ReportDto = [
   body("description")
     .notEmpty()
     .withMessage("Description cannot be empty")
-    .isLength({ max: 10000 })
-    .withMessage("Description cannot exceed 10000 characters"),
+    .isLength({ max: 10000000 })
+    .withMessage("Description cannot exceed 10000000 characters"),
 ];
 
 module.exports = ReportDto;

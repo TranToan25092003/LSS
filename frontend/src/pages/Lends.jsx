@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { redirect, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,6 +34,7 @@ export const lendLoader = () => {
 };
 
 export default function Lends() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [imageFiles, setImageFiles] = useState([]);
   const [formData, setFormData] = useState({
@@ -97,23 +98,17 @@ export default function Lends() {
       if (result.isConfirmed) {
         await Swal.fire({
           title: "Thành công!",
-          text: "Đã phê duyệt ",
+          text: "",
           icon: "success",
           confirmButtonColor: "#22c55e",
         });
-
-        navigate(location.pathname, { replace: true });
-
         const response = await customFetch.post("/lends", {
           ...data,
           images: imageFiles,
         });
-
-        console.log(response);
+        navigate("/", { replace: true });
       }
     } catch (error) {
-      console.log(error);
-      console.log(error.message);
       toast("error", {
         description: error?.message || "error",
       });

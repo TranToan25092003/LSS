@@ -12,7 +12,6 @@ import Swal from "sweetalert2";
 
 export const reviewLoader = async () => {
   try {
-    console.log("9999");
     const token = await clerk.session.getToken();
 
     const { data } = await customFetch.get("/admin/reviews", {

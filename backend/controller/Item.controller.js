@@ -1,9 +1,9 @@
-
-const { Item } = require('../model');
+const { clerkClient } = require("../config/clerk");
+const { Item, Lend } = require("../model");
 
 const getAllItems = async (req, res) => {
   try {
-    const {      
+    const {
       category,
       status,
       rate,
@@ -27,7 +27,7 @@ const getAllItems = async (req, res) => {
     if (search) {
       filter.name = { $regex: search, $options: "i" };
     }
-    
+
     if (category) {
       filter.category = { $regex: new RegExp(category, "i") };
     }
@@ -37,7 +37,7 @@ const getAllItems = async (req, res) => {
     }
 
     if (rate) {
-      filter.rate = rate; 
+      filter.rate = rate;
     }
 
     if (isFree === "true") {
@@ -47,10 +47,21 @@ const getAllItems = async (req, res) => {
     const totalItems = await Item.countDocuments(filter);
     const totalPages = Math.ceil(totalItems / limit);
 
+    const lends = await Lend.find({
+      status: "approved",
+    }).select("item -_id");
+
+    const data = lends.map((item) => {
+      return item.item;
+    });
+
+    filter._id = {
+      $in: data,
+    };
+
     const sortOption = {};
     sortOption[sortBy] = sortOrder === "asc" ? 1 : -1;
-
-    const items = await Item.find(filter)
+    let items = await Item.find(filter)
       .skip(skip)
       .limit(limit)
       .sort(sortOption);
@@ -70,17 +81,29 @@ const getAllItems = async (req, res) => {
   }
 };
 
-  
 const getItemById = async (req, res, next) => {
-    try {
-      const item = await Item.findById(req.params.id);
-      if (!item) return res.status(404).json({ message: 'Not found' });
-      res.json(item);
-    } catch (err) { next(err); }
-  };
+  try {
+    const item = await Item.findById(req.params.id);
 
-  module.exports = {
-    getAllItems,
-    getItemById,
+    const { imageUrl, emailAddresses } = await clerkClient.users.getUser(
+      item.ownerClerkId
+    );
 
-  };
+    if (!item) return res.status(404).json({ message: "Not found" });
+
+    res.json({
+      item,
+      user: {
+        imageUrl,
+        email: emailAddresses[0].emailAddress,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  getAllItems,
+  getItemById,
+};
