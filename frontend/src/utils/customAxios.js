@@ -1,7 +1,9 @@
 import axios from "axios";
 
-const baseUrl = import.meta.env.VITE_BACKEND_URL;
-export const customFetch = axios.create({
-  baseURL: baseUrl,
-  withCredentials: true, // allow to pass with cookies
+const customFetch = axios.create({
+  baseURL: "http://localhost:3000",
+  withCredentials: true,
 });
+
+// Remove the interceptor since we're now passing the token directly in the components
+export { customFetch };

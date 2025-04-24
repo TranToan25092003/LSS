@@ -25,12 +25,11 @@ export const reportLoader = async () => {
 
 export default function Report() {
   const editorRef = useRef(null);
-
-  const [title, setTitle] = useState([]);
+  const [title, setTitle] = useState("");
 
   return (
     <>
-      <Label className={"text-3xl capitalize"}>tittle</Label>
+      <Label className={"text-3xl capitalize"}>Tiêu đề</Label>
       <Input
         type={"text"}
         value={title}
@@ -41,11 +40,11 @@ export default function Report() {
         className={"my-3 border-2"}
       ></Input>
 
-      <Label className={"text-3xl capitalize"}>description</Label>
+      <Label className={"text-3xl capitalize"}>Mô tả</Label>
       <Editor
         apiKey={import.meta.env.VITE_TINYMCE_KEY}
         onInit={(_evt, editor) => (editorRef.current = editor)}
-        initialValue="<p>enter your problem</p>"
+        initialValue="<p>Nhập nội dung báo cáo của bạn</p>"
         init={{
           height: 500,
           menubar: false,
@@ -90,36 +89,38 @@ export default function Report() {
 
             const confirmReport = () => {
               Swal.fire({
-                title: "Send report",
-                text: "Are your sure?",
+                title: "Gửi báo cáo",
+                text: "Bạn có chắc chắn không?",
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: "Send",
-                cancelButtonText: "Cancel",
+                confirmButtonText: "Gửi",
+                cancelButtonText: "Hủy",
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
               }).then(async (result) => {
                 await customFetch.post("/report", correctData);
 
                 if (result.isConfirmed) {
-                  Swal.fire("Success!", "Send report", "success");
+                  Swal.fire("Thành công!", "Đã gửi báo cáo", "success");
                 }
 
                 setTitle("");
-                editorRef.current.setContent("<p>enter your problem</p>");
+                editorRef.current.setContent(
+                  "<p>Nhập nội dung báo cáo của bạn</p>"
+                );
               });
             };
             confirmReport();
           } catch (error) {
             toast("", {
-              description: error?.message || "something wrong 😢😢😢",
+              description: error?.message || "Đã xảy ra lỗi 😢😢😢",
             });
           }
         }}
         size={"lg"}
         className={"mt-2 cursor-pointer hover:bg-amber-950"}
       >
-        Submit
+        Gửi báo cáo
       </Button>
     </>
   );

@@ -6,6 +6,8 @@ const {
   throwErrors,
 } = require("../../middleware/validate-data/throwErrors.middleware");
 const { validateItemStatus } = require("../../dto/lendStatus.dto");
+const { getLendHistory } = require("../../controller/lend.controller");
+const { requireAuth } = require("@clerk/express");
 
 /**
  * ====================================
@@ -35,5 +37,7 @@ router.put(
   throwErrors,
   controller.updateLendStatus
 );
+
+router.get("/history/:clerkId", requireAuth(), getLendHistory);
 
 module.exports = router;
