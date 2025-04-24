@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { testRouter } from "./routers/client/Test.router";
-import { ClerkProvider } from "@clerk/clerk-react";
+import { ClerkProvider, SignedIn } from "@clerk/clerk-react";
 import HomeLayout from "./pages/HomeLayout";
 import { adminRouter } from "./routers/admin/Admin.router";
 // import { worker } from "./mocks/browser";
@@ -8,10 +8,14 @@ import ErrorPage from "./components/global/Error";
 import Lends, { lendLoader } from "./pages/Lends";
 import Report, { reportLoader } from "./pages/Report";
 import Return from "./pages/Return";
-import History from "./pages/History";
 import MySupplies, { mySuppliesLoader } from "./pages/MySupplies";
+import BorrowHistory from "./pages/BorrowHistory";
+import LendHistory from "./pages/LendHistory";
+import Statistics from "./pages/Statistics";
 
 import { routes } from "./routers/client/index";
+import { toast } from "react-hot-toast";
+import { redirect } from "react-router-dom";
 /**
  * ====================================
  * routers
@@ -43,7 +47,20 @@ const routers = createBrowserRouter([
 
       {
         path: "history",
-        element: <History></History>,
+        element: (
+          <SignedIn>
+            <BorrowHistory />
+          </SignedIn>
+        ),
+      },
+
+      {
+        path: "lend-history",
+        element: (
+          <SignedIn>
+            <LendHistory />
+          </SignedIn>
+        ),
       },
 
       {
@@ -51,6 +68,24 @@ const routers = createBrowserRouter([
         element: <MySupplies></MySupplies>,
         loader: mySuppliesLoader,
       },
+
+      {
+        path: "statistics",
+        element: (
+          <SignedIn>
+            <Statistics />
+          </SignedIn>
+        ),
+        loader: async () => {
+          const token = await window.Clerk?.session?.getToken();
+          if (!token) {
+            toast.error("Bạn cần đăng nhập để xem thống kê");
+            return redirect("/");
+          }
+          return null;
+        },
+      },
+
       ...routes,
     ],
     errorElement: <ErrorPage></ErrorPage>,

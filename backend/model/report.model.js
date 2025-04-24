@@ -14,7 +14,46 @@ const ReportSchema = new Schema(
 
     reporterClerkId: {
       type: String,
+      required: true,
     },
+
+    itemId: {
+      type: String,
+      ref: "item",
+      required: true,
+    },
+
+    borrowId: {
+      type: String,
+      ref: "borrow",
+      required: true,
+    },
+
+    type: {
+      type: String,
+      enum: ["damage", "late_return", "lost", "other"],
+      required: true,
+    },
+
+    status: {
+      type: String,
+      enum: ["pending", "processing", "resolved", "rejected"],
+      default: "pending",
+    },
+
+    resolution: {
+      type: String,
+    },
+
+    resolvedAt: {
+      type: Date,
+    },
+
+    images: [
+      {
+        type: String, // URL của ảnh
+      },
+    ],
   },
   { timestamps: true }
 );
