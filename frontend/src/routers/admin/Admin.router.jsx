@@ -8,6 +8,7 @@ import SuppliesAdmin, {
   suppliesRejectLoader,
 } from "@/pages/SuppliesAdmin";
 import { authenTicationLoader } from "@/utils/authentication.loader";
+import Statistics from "@/pages/Statistics";
 
 // this router is for testing
 export const adminRouter = {
@@ -44,6 +45,11 @@ export const adminRouter = {
       path: "report",
       element: <ReportAdmin></ReportAdmin>,
       loader: reportAdminLoader,
+    },
+
+    {
+      path: "statistics",
+      element: <Statistics></Statistics>,
     },
   ],
 };

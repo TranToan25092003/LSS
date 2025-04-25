@@ -1,5 +1,6 @@
 const { Borrow, Item } = require("../model");
 const Return = require("../model/returned.model");
+const { clerkClient } = require("../config/clerk");
 
 const createBorrow = async (req, res, next) => {
   try {
@@ -71,7 +72,38 @@ const getBorrowHistory = async (req, res) => {
   }
 };
 
+const getAllBorrows = async (req, res) => {
+  try {
+    // Get all borrows with item details
+    const borrows = await Borrow.find()
+      .populate("item")
+      .sort({ createdAt: -1 });
+
+    // Get return status for each borrow
+    const borrowsWithReturnStatus = await Promise.all(
+      borrows.map(async (borrow) => {
+        const returnStatus = await Return.findOne({ borrow: borrow._id });
+        return {
+          ...borrow.toObject(),
+          returnStatus: returnStatus || null,
+        };
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      data: borrowsWithReturnStatus,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createBorrow,
   getBorrowHistory,
+  getAllBorrows,
 };

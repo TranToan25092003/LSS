@@ -4,6 +4,7 @@ const reportRouter = require("./report.router");
 const itemRouter = require("../item/item.router");
 const borrowRouter = require("../item/borrow.router");
 const vnpayRouter = require("../vnp/vnpayRouter");
+const userRouter = require("../user/user.router");
 
 const { checkHeaders } = require("../../middleware/guards/authen.middleware");
 const { ClerkExpressRequireAuth } = require("@clerk/clerk-sdk-node");
@@ -23,4 +24,5 @@ module.exports = (app) => {
 
   app.use("/items", itemRouter);
   app.use("/borrow", borrowRouter);
+  app.use("/users", userRouter);
 };

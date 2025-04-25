@@ -1,9 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { testRouter } from "./routers/client/Test.router";
-import { ClerkProvider, SignedIn } from "@clerk/clerk-react";
+import { ClerkProvider } from "@clerk/clerk-react";
 import HomeLayout from "./pages/HomeLayout";
 import { adminRouter } from "./routers/admin/Admin.router";
-// import { worker } from "./mocks/browser";
 import ErrorPage from "./components/global/Error";
 import Lends, { lendLoader } from "./pages/Lends";
 import Report, { reportLoader } from "./pages/Report";
@@ -11,9 +10,8 @@ import Return from "./pages/Return";
 import MySupplies, { mySuppliesLoader } from "./pages/MySupplies";
 import BorrowHistory from "./pages/BorrowHistory";
 import LendHistory from "./pages/LendHistory";
-import Statistics from "./pages/Statistics";
-
 import { routes } from "./routers/client/index";
+<<<<<<< HEAD
 import { toast } from "react-hot-toast";
 import { redirect } from "react-router-dom";
 
@@ -109,20 +107,60 @@ const routers = createBrowserRouter([
 //   .catch((error) => {
 //     console.error("MSW worker failed to start", error);
 //   });
+=======
+>>>>>>> origin/Ngaaa
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
-  throw new Error("Add your Clerk Publishable Key to the .env file");
+  throw new Error("Missing Clerk Publishable Key");
 }
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <HomeLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      ...routes,
+      {
+        path: "lends",
+        element: <Lends />,
+        loader: lendLoader,
+      },
+      {
+        path: "report",
+        element: <Report />,
+        loader: reportLoader,
+      },
+      {
+        path: "return",
+        element: <Return />,
+      },
+      {
+        path: "supplies",
+        element: <MySupplies />,
+        loader: mySuppliesLoader,
+      },
+      {
+        path: "history",
+        element: <BorrowHistory />,
+      },
+      {
+        path: "lend-history",
+        element: <LendHistory />,
+      },
+    ],
+  },
+  adminRouter,
+  testRouter,
+]);
 
 function App() {
   return (
-    <>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-        <RouterProvider router={routers}></RouterProvider>
-      </ClerkProvider>
-    </>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <RouterProvider router={router} />
+    </ClerkProvider>
   );
 }
 
