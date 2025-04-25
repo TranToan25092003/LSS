@@ -139,6 +139,7 @@ function Return() {
                     onClick={() =>
                       handleOwnerConfirm(returnItem.itemId, "owner", true)
                     }
+                  // disabled={returnItem.borrowerConfirm}
                   >
                     Confirm
                   </Button>
@@ -150,6 +151,7 @@ function Return() {
                     onClick={() =>
                       handleOwnerConfirm(returnItem.itemId, "owner", false)
                     }
+                    disabled={returnItem.borrowerConfirm}
                   >
                     Undo Confirm
                   </Button>
@@ -168,6 +170,7 @@ function Return() {
                     onClick={() =>
                       handleConfirm(returnItem._id, "borrower", true)
                     }
+                    disabled={returnItem.ownerConfirm}
                   >
                     Confirm
                   </Button>
@@ -179,6 +182,7 @@ function Return() {
                     onClick={() =>
                       handleConfirm(returnItem._id, "borrower", false)
                     }
+                    disabled={returnItem.ownerConfirm}
                   >
                     Undo Confirm
                   </Button>
