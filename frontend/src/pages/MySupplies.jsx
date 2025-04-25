@@ -44,42 +44,36 @@ export const mySuppliesLoader = async () => {
     toast("Lỗi khi tải dữ liệu")
   }
 }
+const changeLendStatus = async (itemId, currentStatus, navigate) => {
+  const newStatus = currentStatus === "available" ? "notAvailable" : "available";
+  const actionText = currentStatus === "available" ? "Dừng cho mượn" : "Cho mượn";
 
-const changeLendStatus = async (lendId) => {
   const result = await Swal.fire({
     title: "Xác nhận",
-    text: "Bạn muốn cho mượn hay hủy yêu cầu này?",
+    text: `Bạn muốn ${actionText} vật phẩm này?`,
     icon: "question",
     showCancelButton: true,
-    confirmButtonText: "Cho mượn",
+    confirmButtonText: actionText,
     cancelButtonText: "Hủy",
-  })
+  });
 
   if (result.isConfirmed) {
-    console.log(lendId)
-    const response = await customFetch.put(`/lends/supplies/${lendId}`, {
-      status: "available",
-    })
-
-    console.log(response)
-
-    await Swal.fire({
-      title: "Thành công!",
-      text: "Yêu cầu đã được cập nhật.",
-      icon: "success",
-      timer: 1500,
-      showConfirmButton: false,
-    })
-  } else if (result.dismiss === Swal.DismissReason.cancel) {
-    await Swal.fire({
-      title: "Thành công!",
-      text: "Yêu cầu đã bị hủy.",
-      icon: "success",
-      timer: 1500,
-      showConfirmButton: false,
-    })
+    try {
+      await customFetch.put(`/items/update/${itemId}`, { status: newStatus });
+      toast("Thành công", { description: `Vật phẩm đã được ${actionText}` });
+      if (typeof navigate === "function") {
+        navigate(0); // Reload the page
+      } else {
+        console.warn("navigate is not a function, page will not reload automatically.");
+        // Fallback: Manually reload the page using window.location
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Lỗi khi cập nhật trạng thái:", error);
+      toast("Lỗi", { description: "Không thể cập nhật trạng thái vật phẩm" });
+    }
   }
-}
+};
 
 const MySupplies = () => {
   const { data } = useLoaderData()
@@ -344,15 +338,13 @@ const MySupplies = () => {
               </div>
             </CardContent>
             <CardFooter className="flex gap-2">
-              <Button
-                className="flex-1 hover:bg-green-400 cursor-pointer"
-                variant={`${item.status === "available" ? "destructive" : "outline"}`}
-                onClick={() => {
-                  changeLendStatus(item._id)
-                }}
-              >
-                {item.status === "available" ? "Dừng cho mượn" : "Cho mượn"}
-              </Button>
+            <Button
+  className="flex-1 hover:bg-green-400 cursor-pointer"
+  variant={`${item.status === "available" ? "destructive" : "outline"}`}
+  onClick={() => changeLendStatus(item._id, item.status)}
+>
+  {item.status === "available" ? "Dừng cho mượn" : "Cho mượn"}
+</Button>
               <Button
                 className="flex-1 hover:bg-blue-400 cursor-pointer"
                 variant="outline"
