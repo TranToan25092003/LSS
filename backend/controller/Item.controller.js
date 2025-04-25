@@ -84,8 +84,20 @@ const getAllItems = async (req, res) => {
 const getItemById = async (req, res, next) => {
   try {
     const item = await Item.findById(req.params.id);
+
+    const { imageUrl, emailAddresses } = await clerkClient.users.getUser(
+      item.ownerClerkId
+    );
+
     if (!item) return res.status(404).json({ message: "Not found" });
-    res.json(item);
+
+    res.json({
+      item,
+      user: {
+        imageUrl,
+        email: emailAddresses[0].emailAddress,
+      },
+    });
   } catch (err) {
     next(err);
   }

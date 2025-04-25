@@ -61,8 +61,9 @@ module.exports.getLendsSupplies = async (req, res) => {
  * ====================================
  */
 
-
 module.exports.getItemById = async (req, res) => {
+  console.log("9999999999999999999999999999999999999999999");
+
   try {
     const lend = await Lend.findOne({
       item: req.params.id,
@@ -87,7 +88,6 @@ module.exports.getItemById = async (req, res) => {
     });
   }
 };
-
 
 module.exports.updateLendStatus = async (req, res) => {
   console.log(req.params.id);
