@@ -5,21 +5,36 @@ import clerk from "./clerk";
 export const authenTicationLoader = async () => {
   try {
     if (!clerk.isSignedIn) {
-      toast("You must login first", {
-        description: "Login please",
+      toast.error("Bạn cần đăng nhập để truy cập trang này", {
+        description: "Vui lòng đăng nhập để tiếp tục",
       });
       return redirect("/");
     }
 
-    const role = (await clerk.user.getOrganizationMemberships()).data[0].role;
+    const memberships = await clerk.user.getOrganizationMemberships();
+    
+    if (!memberships.data || memberships.data.length === 0) {
+      toast.error("Bạn không thuộc tổ chức nào", {
+        description: "Vui lòng liên hệ admin để được thêm vào tổ chức",
+      });
+      return redirect("/");
+    }
+
+    const role = memberships.data[0].role;
 
     if (!role.includes("admin")) {
-      toast("You are not allow to access this page", {
-        description: "Forbidden resource",
+      toast.error("Bạn không có quyền truy cập trang này", {
+        description: "Chỉ admin mới có thể truy cập",
       });
       return redirect("/");
     }
+
+    return null;
   } catch (error) {
-    toast(error?.message || "error");
+    console.error("Authentication error:", error);
+    toast.error("Lỗi xác thực", {
+      description: error.message || "Vui lòng thử lại sau",
+    });
+    return redirect("/");
   }
 };
