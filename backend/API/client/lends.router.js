@@ -24,6 +24,7 @@ router.post("/", itemValidation, throwErrors, controller.createLends);
  * ====================================
  */
 router.get("/supplies", controller.getLendsSupplies);
+router.get("/supplies/:id", controller.getItemById);
 
 /**
  * ====================================
