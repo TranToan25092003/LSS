@@ -84,26 +84,71 @@ const getAllItems = async (req, res) => {
 const getItemById = async (req, res, next) => {
   try {
     const item = await Item.findById(req.params.id);
-
-    const { imageUrl, emailAddresses } = await clerkClient.users.getUser(
-      item.ownerClerkId
-    );
-
     if (!item) return res.status(404).json({ message: "Not found" });
-
-    res.json({
-      item,
-      user: {
-        imageUrl,
-        email: emailAddresses[0].emailAddress,
-      },
-    });
+    res.json(item);
   } catch (err) {
     next(err);
+  }
+};
+
+const updateItem = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, category, description, price, isFree, rate, status, images } =
+      req.body;
+
+    const item = await Item.findById(id);
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    // Update fields
+    item.name = name || item.name;
+    item.category = category || item.category;
+    item.description = description || item.description;
+    item.price = isFree ? 0 : price || item.price;
+    item.isFree = isFree !== undefined ? isFree : item.isFree;
+    item.rate = rate || item.rate;
+    item.status = status || item.status;
+    item.images = images || item.images;
+
+    const updatedItem = await item.save();
+    res.json({
+      message: "Item updated successfully",
+      item: updatedItem,
+    });
+  } catch (err) {
+    console.error("Lỗi khi cập nhật item:", err);
+    res
+      .status(500)
+      .json({ message: "Lỗi khi cập nhật item", error: err.message });
+  }
+};
+
+const deleteItem = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const item = await Item.findById(id);
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    // Xóa tất cả bản ghi mượn liên quan đến item
+    await Lend.deleteMany({ item: id });
+
+    // Xóa item
+    await item.deleteOne(); // Thay remove() bằng deleteOne()
+    res.json({ message: "Item and related lends deleted successfully" });
+  } catch (err) {
+    console.error("Lỗi khi xóa item:", err);
+    res.status(500).json({ message: "Lỗi khi xóa item", error: err.message });
   }
 };
 
 module.exports = {
   getAllItems,
   getItemById,
+  updateItem,
+  deleteItem,
 };
