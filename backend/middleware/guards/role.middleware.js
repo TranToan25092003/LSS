@@ -13,7 +13,7 @@ module.exports.roleProtected = async (req, res, next) => {
   // // console.log(token);
   const userId = req.auth.userId;
   const user = await clerk.users.getUser(userId);
-  console.log(user);
+  // console.log(user);
   req.userId = userId;
   req.user = user;
 
@@ -27,7 +27,7 @@ module.exports.roleProtected = async (req, res, next) => {
   const roleUserInOrganization =
     await clerkClient.users.getOrganizationMembershipList({ userId: userId });
 
-  console.log(roleUserInOrganization.data[0]?.role);
+  // console.log(roleUserInOrganization.data[0]?.role);
   if (roleUserInOrganization.data[0]?.role != "org:admin") {
     return res.status(403).json({
       error: "forbidden resource",

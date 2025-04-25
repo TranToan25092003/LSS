@@ -14,7 +14,7 @@ import {
   SignUpButton,
   useAuth,
 } from "@clerk/clerk-react";
-import { Link } from "react-router-dom";
+import { href, Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { LuAlignLeft } from "react-icons/lu";
 import UserIcon from "@/components/navbar/UserIcon";
@@ -54,7 +54,7 @@ const LinkDropdown = () => {
               if (orgRole == "org:admin") {
                 return (
                   <DropdownMenuItem key={link.href}>
-                    <Link href={link.href} className="capitalize w-full">
+                    <Link to={link.href} className="capitalize w-full">
                       {link.label}
                     </Link>
                   </DropdownMenuItem>
@@ -63,7 +63,7 @@ const LinkDropdown = () => {
             }
             return (
               <DropdownMenuItem key={link.href}>
-                <Link href={link.href} className="capitalize w-full">
+                <Link to={link.href} className="capitalize w-full">
                   {link.label}
                 </Link>
               </DropdownMenuItem>

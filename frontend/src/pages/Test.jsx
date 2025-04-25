@@ -3,10 +3,8 @@ import { toast } from "sonner";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@clerk/clerk-react";
-import { useEffect } from "react";
-import { customFetch } from "@/utils/cutomAxios";
+import { customFetch } from "@/utils/customAxios";
 
 const Test = () => {
   const { getToken, isSignedIn, userId, orgRole, orgId } = useAuth();
@@ -25,8 +23,11 @@ const Test = () => {
           onClick={async () => {
             try {
               const token = await getToken();
-
-              console.log(`Bearer ${token}`);
+              console.log(
+                await window.Clerk.session.getToken({
+                  template: "testing-app",
+                })
+              );
 
               if (!token) {
                 const data = await axios.get("http://localhost:3000");
@@ -39,11 +40,7 @@ const Test = () => {
                   },
                 });
               } else {
-                const data = await customFetch.get("/test", {
-                  headers: {
-                    Authorization: `Bearer ${token}`, // Gửi token trong header
-                  },
-                });
+                const data = await customFetch.get("/test");
 
                 toast(data.data.message, {
                   description: "Connect to backend success 😊😊😊",

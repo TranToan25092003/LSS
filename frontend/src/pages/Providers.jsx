@@ -1,11 +1,10 @@
 import React from "react";
-import { Toaster } from "sonner";
 import ThemeProvider from "./ThemeProvider";
+import { Toaster } from "sonner";
 
 const Providers = ({ children }) => {
   return (
     <>
-      <Toaster richColors></Toaster>
       <ThemeProvider
         attribute={"class"}
         defaultTheme="system"
