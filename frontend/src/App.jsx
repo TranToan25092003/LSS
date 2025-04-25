@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { testRouter } from "./routers/client/Test.router";
-import { ClerkProvider } from "@clerk/clerk-react";
+import { ClerkProvider, SignedIn } from "@clerk/clerk-react";
 import HomeLayout from "./pages/HomeLayout";
 import { adminRouter } from "./routers/admin/Admin.router";
 import ErrorPage from "./components/global/Error";
@@ -11,9 +11,9 @@ import MySupplies, { mySuppliesLoader } from "./pages/MySupplies";
 import BorrowHistory from "./pages/BorrowHistory";
 import LendHistory from "./pages/LendHistory";
 import { routes } from "./routers/client/index";
-<<<<<<< HEAD
 import { toast } from "react-hot-toast";
 import { redirect } from "react-router-dom";
+import Statistics from "./pages/Statistics";
 
 /**
  * ====================================
@@ -107,8 +107,6 @@ const routers = createBrowserRouter([
 //   .catch((error) => {
 //     console.error("MSW worker failed to start", error);
 //   });
-=======
->>>>>>> origin/Ngaaa
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 

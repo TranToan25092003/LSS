@@ -462,11 +462,9 @@ const MySupplies = () => {
             </div>
             <Button
               className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-              onClick={() =>
-                toast("Feature coming soon", {
-                  description: "Add item functionality will be available soon",
-                })
-              }
+              onClick={() => {
+                navigate("/lends");
+              }}
             >
               <Plus size={18} className="mr-2" />
               Add Item
