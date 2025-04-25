@@ -54,7 +54,8 @@ export default function ItemDetailPage() {
         );
         const data = response.data;
         setItem(data);
-        setTotalPrice(data.isFree ? 0 : data.price);
+        console.log(data);
+        setTotalPrice(data.item.isFree ? 0 : data.item.price);
       } catch (error) {
         console.error(
           "Error fetching item:",
@@ -74,8 +75,8 @@ export default function ItemDetailPage() {
   const handleDurationChange = (e) => {
     const duration = parseInt(e.target.value) || 1;
     setBorrowDuration(duration);
-    if (item && !item.isFree) {
-      setTotalPrice(item.price * duration);
+    if (item.item && !item.item.isFree) {
+      setTotalPrice(item.item.price * duration);
     }
   };
 

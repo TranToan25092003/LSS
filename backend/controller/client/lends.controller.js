@@ -62,14 +62,13 @@ module.exports.getLendsSupplies = async (req, res) => {
  */
 
 module.exports.getItemById = async (req, res) => {
-  console.log("9999999999999999999999999999999999999999999");
-
   try {
+    console.log("999999999999999");
     const lend = await Lend.findOne({
       item: req.params.id,
       status: "approved",
     }).populate("item");
-
+    console.log(lend);
     if (!lend || !lend.item) {
       return res.status(404).json({ message: "Lend item not found" });
     }
