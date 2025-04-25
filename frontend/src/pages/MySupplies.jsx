@@ -29,8 +29,8 @@ import * as z from "zod"
 export const mySuppliesLoader = async () => {
   try {
     if (!clerk.isSignedIn) {
-      toast("Bạn phải đăng nhập trước", {
-        description: "Vui lòng đăng nhập",
+      toast("You must sign in first", {
+        description: "Please sign in",
       })
       return redirect("/")
     }
@@ -41,26 +41,27 @@ export const mySuppliesLoader = async () => {
       data: data.data,
     }
   } catch {
-    toast("Lỗi khi tải dữ liệu")
+    toast("Error loading data")
   }
 }
+
 const changeLendStatus = async (itemId, currentStatus, navigate) => {
   const newStatus = currentStatus === "available" ? "notAvailable" : "available";
-  const actionText = currentStatus === "available" ? "Dừng cho mượn" : "Cho mượn";
+  const actionText = currentStatus === "available" ? "Stop lending" : "Lend";
 
   const result = await Swal.fire({
-    title: "Xác nhận",
-    text: `Bạn muốn ${actionText} vật phẩm này?`,
+    title: "Confirm",
+    text: `Do you want to ${actionText} this item?`,
     icon: "question",
     showCancelButton: true,
     confirmButtonText: actionText,
-    cancelButtonText: "Hủy",
+    cancelButtonText: "Cancel",
   });
 
   if (result.isConfirmed) {
     try {
       await customFetch.put(`/items/update/${itemId}`, { status: newStatus });
-      toast("Thành công", { description: `Vật phẩm đã được ${actionText}` });
+      toast("Success", { description: `Item has been ${actionText}` });
       if (typeof navigate === "function") {
         navigate(0); // Reload the page
       } else {
@@ -69,8 +70,8 @@ const changeLendStatus = async (itemId, currentStatus, navigate) => {
         window.location.reload();
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật trạng thái:", error);
-      toast("Lỗi", { description: "Không thể cập nhật trạng thái vật phẩm" });
+      console.error("Error updating status:", error);
+      toast("Error", { description: "Could not update item status" });
     }
   }
 };
@@ -88,38 +89,38 @@ const MySupplies = () => {
       setCurrentItem(itemData)
       setEditModalOpen(true)
     } catch (error) {
-      console.error("Lỗi khi lấy thông tin vật phẩm:", error)
-      toast("Lỗi", { description: "Không thể lấy thông tin vật phẩm" })
+      console.error("Error fetching item details:", error)
+      toast("Error", { description: "Could not fetch item details" })
     }
   }
 
   const handleDelete = async (itemId) => {
     try {
       const result = await Swal.fire({
-        title: "Xác nhận",
-        text: "Bạn có chắc chắn muốn xóa vật phẩm này?",
+        title: "Confirm",
+        text: "Are you sure you want to delete this item?",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Xóa",
-        cancelButtonText: "Hủy",
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
       })
 
       if (result.isConfirmed) {
         await customFetch.delete(`/items/delete/${itemId}`)
-        toast("Thành công", { description: "Vật phẩm đã được xóa" })
+        toast("Success", { description: "Item has been deleted" })
         navigate(0) // Reload the page to reflect changes
       }
     } catch (error) {
-      console.error("Lỗi khi xóa vật phẩm:", error)
-      toast("Lỗi", { description: "Không thể xóa vật phẩm" })
+      console.error("Error deleting item:", error)
+      toast("Error", { description: "Could not delete item" })
     }
   }
 
   const formSchema = z.object({
-    name: z.string().min(1, { message: "Tên không được để trống" }),
-    category: z.string().min(1, { message: "Danh mục không được để trống" }),
+    name: z.string().min(1, { message: "Name cannot be empty" }),
+    category: z.string().min(1, { message: "Category cannot be empty" }),
     description: z.string(),
-    price: z.coerce.number().min(0, { message: "Giá không được âm" }),
+    price: z.coerce.number().min(0, { message: "Price cannot be negative" }),
     isFree: z.boolean().default(false),
     rate: z.string(),
     status: z.enum(["available", "unavailable"]),
@@ -152,12 +153,12 @@ const MySupplies = () => {
         }
 
         await customFetch.put(`/items/update/${item._id}`, updatedData)
-        toast("Thành công", { description: "Vật phẩm đã được cập nhật" })
+        toast("Success", { description: "Item has been updated" })
         onClose()
         navigate(0)
       } catch (error) {
-        console.error("Lỗi khi cập nhật vật phẩm:", error)
-        toast("Lỗi", { description: "Không thể cập nhật vật phẩm" })
+        console.error("Error updating item:", error)
+        toast("Error", { description: "Could not update item" })
       }
     }
 
@@ -165,8 +166,8 @@ const MySupplies = () => {
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">Chỉnh sửa vật phẩm</DialogTitle>
-            <DialogDescription>Cập nhật thông tin vật phẩm của bạn. Nhấn lưu khi hoàn tất.</DialogDescription>
+            <DialogTitle className="text-xl font-semibold">Edit Item</DialogTitle>
+            <DialogDescription>Update your item information. Click save when done.</DialogDescription>
           </DialogHeader>
 
           <Form {...form}>
@@ -176,9 +177,9 @@ const MySupplies = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tên</FormLabel>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Tên vật phẩm" {...field} />
+                      <Input placeholder="Item name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -190,9 +191,9 @@ const MySupplies = () => {
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Danh mục</FormLabel>
+                    <FormLabel>Category</FormLabel>
                     <FormControl>
-                      <Input placeholder="Danh mục" {...field} />
+                      <Input placeholder="Category" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -204,9 +205,9 @@ const MySupplies = () => {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Mô tả</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Mô tả chi tiết về vật phẩm" className="resize-none" {...field} />
+                      <Textarea placeholder="Detailed description of the item" className="resize-none" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -219,9 +220,9 @@ const MySupplies = () => {
                   name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Giá</FormLabel>
+                      <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="Giá" {...field} disabled={form.watch("isFree")} />
+                        <Input type="number" placeholder="Price" {...field} disabled={form.watch("isFree")} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -252,8 +253,8 @@ const MySupplies = () => {
                       <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel>Miễn phí</FormLabel>
-                      <FormDescription>Đánh dấu nếu vật phẩm này được cho mượn miễn phí</FormDescription>
+                      <FormLabel>Free</FormLabel>
+                      <FormDescription>Check if this item is lent for free</FormDescription>
                     </div>
                   </FormItem>
                 )}
@@ -264,16 +265,16 @@ const MySupplies = () => {
                 name="status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Trạng thái</FormLabel>
+                    <FormLabel>Status</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Chọn trạng thái" />
+                          <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="available">Có sẵn</SelectItem>
-                        <SelectItem value="unavailable">Không có sẵn</SelectItem>
+                        <SelectItem value="available">Available</SelectItem>
+                        <SelectItem value="unavailable">Unavailable</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -286,11 +287,11 @@ const MySupplies = () => {
                 name="images"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Hình ảnh</FormLabel>
+                    <FormLabel>Images</FormLabel>
                     <FormControl>
-                      <Input placeholder="URL hình ảnh, cách nhau bởi dấu phẩy" {...field} />
+                      <Input placeholder="Image URLs, separated by commas" {...field} />
                     </FormControl>
-                    <FormDescription>Nhập các URL hình ảnh, cách nhau bởi dấu phẩy</FormDescription>
+                    <FormDescription>Enter image URLs, separated by commas</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -298,9 +299,9 @@ const MySupplies = () => {
 
               <DialogFooter className="pt-4">
                 <Button type="button" variant="outline" onClick={onClose}>
-                  Hủy
+                  Cancel
                 </Button>
-                <Button type="submit">Lưu thay đổi</Button>
+                <Button type="submit">Save Changes</Button>
               </DialogFooter>
             </form>
           </Form>
@@ -311,7 +312,7 @@ const MySupplies = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-6">Danh sách vật phẩm</h2>
+      <h2 className="text-2xl font-bold mb-6">Item List</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {data.map(({ item }) => (
           <Card key={item._id} className="flex flex-col">
@@ -330,34 +331,34 @@ const MySupplies = () => {
               <p className="mt-2 text-sm text-gray-600 truncate">{item.description}</p>
               <div className="mt-2 flex items-center gap-2">
                 <span className="font-medium">
-                  {item.isFree ? "Miễn phí" : `${item.price.toLocaleString()} VNĐ / ${item.rate}`}
+                  {item.isFree ? "Free" : `${item.price.toLocaleString()} VNĐ / ${item.rate}`}
                 </span>
                 <Badge variant={item.status === "available" ? "default" : "destructive"}>
-                  {item.status === "available" ? "Có sẵn" : "Không có sẵn"}
+                  {item.status === "available" ? "Available" : "Unavailable"}
                 </Badge>
               </div>
             </CardContent>
             <CardFooter className="flex gap-2">
-            <Button
-  className="flex-1 hover:bg-green-400 cursor-pointer"
-  variant={`${item.status === "available" ? "destructive" : "outline"}`}
-  onClick={() => changeLendStatus(item._id, item.status)}
->
-  {item.status === "available" ? "Dừng cho mượn" : "Cho mượn"}
-</Button>
+              <Button
+                className="flex-1 hover:bg-green-400 cursor-pointer"
+                variant={`${item.status === "available" ? "destructive" : "outline"}`}
+                onClick={() => changeLendStatus(item._id, item.status, navigate)}
+              >
+                {item.status === "available" ? "Stop Lending" : "Lend"}
+              </Button>
               <Button
                 className="flex-1 hover:bg-blue-400 cursor-pointer"
                 variant="outline"
                 onClick={() => handleEdit(item._id)}
               >
-                Chỉnh sửa
+                Edit
               </Button>
               <Button
                 className="flex-1 hover:bg-red-400 cursor-pointer"
                 variant="destructive"
                 onClick={() => handleDelete(item._id)}
               >
-                Xóa
+                Delete
               </Button>
             </CardFooter>
           </Card>
