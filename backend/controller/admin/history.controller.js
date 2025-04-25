@@ -1,4 +1,5 @@
 const { clerkClient } = require("../../config/clerk");
+const { Problem } = require("../../model");
 const Borrow = require("../../model/borrow.model");
 const Report = require("../../model/report.model");
 const Return = require("../../model/returned.model");
@@ -25,7 +26,7 @@ module.exports.getHistory = async (req, res) => {
  * ====================================
  */
 module.exports.getReport = async (req, res) => {
-  const reports = await Report.find().sort({ createdAt: 1 });
+  const reports = await Problem.find().sort({ createdAt: 1 });
 
   const data = await Promise.all(
     reports.map(async (r) => {

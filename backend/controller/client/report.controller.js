@@ -1,8 +1,8 @@
-const Report = require("../../model/report.model");
+const Problem = require("../../model/problems.model");
 
 module.exports.sendReport = async (req, res) => {
   try {
-    await Report.create({
+    await Problem.create({
       reporterClerkId: req.auth.userId,
       ...req.body,
     });
@@ -10,6 +10,7 @@ module.exports.sendReport = async (req, res) => {
       message: "success",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "errors",
     });

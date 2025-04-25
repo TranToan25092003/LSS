@@ -4,7 +4,6 @@ export const links = [
   { href: "/history", label: "history" },
   { href: "/lends", label: "lend" },
   { href: "/return", label: "return" },
-  { href: "/statistics", label: "statistics" },
   { href: "/admin", label: "dashboard" },
   { href: "/report", label: "report" },
 ];

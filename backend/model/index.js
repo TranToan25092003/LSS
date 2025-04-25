@@ -5,6 +5,7 @@ const Log = require("./log.model");
 const Notify = require("./notify.model");
 const Report = require("./report.model");
 const Returned = require("./returned.model");
+const Problem = require("./problems.model");
 
 module.exports = {
   Borrow,
@@ -14,4 +15,5 @@ module.exports = {
   Notify,
   Report,
   Returned,
+  Problem,
 };
