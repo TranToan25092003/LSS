@@ -120,7 +120,8 @@ export default function Statistics() {
         // Calculate return rate for each borrower
         Object.keys(borrowerStats).forEach((borrowerId) => {
           const stats = borrowerStats[borrowerId];
-          stats.returnRate = stats.count > 0 ? (stats.returns / stats.count) * 100 : 0;
+          stats.returnRate =
+            stats.count > 0 ? (stats.returns / stats.count) * 100 : 0;
         });
 
         const topBorrowers = await Promise.all(
@@ -132,7 +133,9 @@ export default function Statistics() {
                 const userResponse = await customFetch.get(`/users/${clerkId}`);
                 const user = userResponse.data;
                 return {
-                  name: user ? `${user.firstName} ${user.lastName}` : "Người dùng không xác định",
+                  name: user
+                    ? `${user.firstName} ${user.lastName}`
+                    : "Người dùng không xác định",
                   ...stats,
                 };
               } catch (err) {
@@ -167,7 +170,8 @@ export default function Statistics() {
         // Calculate return rate for each item
         Object.keys(itemStats).forEach((itemId) => {
           const stats = itemStats[itemId];
-          stats.returnRate = stats.count > 0 ? (stats.returns / stats.count) * 100 : 0;
+          stats.returnRate =
+            stats.count > 0 ? (stats.returns / stats.count) * 100 : 0;
         });
 
         const topItems = await Promise.all(
@@ -196,7 +200,9 @@ export default function Statistics() {
 
         // Calculate monthly statistics with return rates
         const monthlyStats = borrows.reduce((acc, borrow) => {
-          const month = format(new Date(borrow.createdAt), "yyyy-MM", { locale: vi });
+          const month = format(new Date(borrow.createdAt), "yyyy-MM", {
+            locale: vi,
+          });
           if (!acc[month]) {
             acc[month] = {
               totalBorrows: 0,
@@ -212,7 +218,7 @@ export default function Statistics() {
             const returnDate = new Date(borrow.returnStatus.timeReturned);
             const dueDate = new Date(borrow.createdAt);
             dueDate.setHours(dueDate.getHours() + borrow.totalTime);
-            
+
             if (returnDate <= dueDate) {
               acc[month].onTimeReturns++;
             } else {
@@ -226,11 +232,16 @@ export default function Statistics() {
           totalItems,
           availableItems,
           borrowedItems,
-          categories: Object.entries(categoryStats).map(([category, stats]) => ({
-            category,
-            ...stats,
-            utilizationRate: stats.total > 0 ? ((stats.borrowed / stats.total) * 100).toFixed(1) : "0.0",
-          })),
+          categories: Object.entries(categoryStats).map(
+            ([category, stats]) => ({
+              category,
+              ...stats,
+              utilizationRate:
+                stats.total > 0
+                  ? ((stats.borrowed / stats.total) * 100).toFixed(1)
+                  : "0.0",
+            })
+          ),
           topBorrowers,
           topItems,
           monthlyStats: Object.entries(monthlyStats)
@@ -238,8 +249,14 @@ export default function Statistics() {
             .map(([month, data]) => ({
               month,
               ...data,
-              returnRate: data.totalBorrows > 0 ? ((data.totalReturns / data.totalBorrows) * 100).toFixed(1) : "0.0",
-              onTimeRate: data.totalReturns > 0 ? ((data.onTimeReturns / data.totalReturns) * 100).toFixed(1) : "0.0",
+              returnRate:
+                data.totalBorrows > 0
+                  ? ((data.totalReturns / data.totalBorrows) * 100).toFixed(1)
+                  : "0.0",
+              onTimeRate:
+                data.totalReturns > 0
+                  ? ((data.onTimeReturns / data.totalReturns) * 100).toFixed(1)
+                  : "0.0",
             })),
         });
       } catch (err) {
@@ -276,7 +293,6 @@ export default function Statistics() {
   return (
     <div className="container mx-auto p-4 space-y-8">
       <h1 className="text-2xl font-bold mb-6">Thống kê hệ thống</h1>
-
       {/* Basic Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
@@ -309,7 +325,6 @@ export default function Statistics() {
           </CardContent>
         </Card>
       </div>
-
       {/* Category Stats */}
       <Card>
         <CardHeader>
@@ -339,7 +354,6 @@ export default function Statistics() {
           </Table>
         </CardContent>
       </Card>
-
       {/* Top Borrowers */}
       <Card>
         <CardHeader>
@@ -367,9 +381,8 @@ export default function Statistics() {
           </Table>
         </CardContent>
       </Card>
-
       {/* Top Items */}
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Top đồ được mượn nhiều nhất</CardTitle>
           <CardDescription>5 đồ được mượn nhiều nhất</CardDescription>
@@ -396,8 +409,7 @@ export default function Statistics() {
             </TableBody>
           </Table>
         </CardContent>
-      </Card>
-
+      </Card> */}
       {/* Monthly Statistics */}
       <Card>
         <CardHeader>

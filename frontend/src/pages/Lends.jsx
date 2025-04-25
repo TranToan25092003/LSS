@@ -46,7 +46,7 @@ export default function Lends() {
     rate: faker.helpers.arrayElement(["day", "hour"]),
     isFree: faker.datatype.boolean({ probability: 1 }),
 
-    status: faker.helpers.arrayElement(["available", "unavailable"]),
+    status: faker.helpers.arrayElement(["available", "notAvailable"]),
   });
 
   const cloudinaryRef = useRef();
@@ -266,7 +266,10 @@ export default function Lends() {
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue
+                    placeholder="Select status"
+                    selected="available"
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="available">Available</SelectItem>

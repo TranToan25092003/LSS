@@ -6,6 +6,8 @@ const borrowRouter = require("../item/borrow.router");
 const vnpayRouter = require("../vnp/vnpayRouter");
 const userRouter = require("../user/user.router");
 
+const returnRouter = require("../client/returned.router");
+
 const { checkHeaders } = require("../../middleware/guards/authen.middleware");
 const { ClerkExpressRequireAuth } = require("@clerk/clerk-sdk-node");
 const { roleProtected } = require("../../middleware/guards/role.middleware");
@@ -25,4 +27,6 @@ module.exports = (app) => {
   app.use("/items", itemRouter);
   app.use("/borrow", borrowRouter);
   app.use("/users", userRouter);
+
+  app.use("/return", checkHeaders, requireAuth(), returnRouter);
 };
